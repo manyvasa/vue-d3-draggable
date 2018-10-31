@@ -3,7 +3,7 @@
     div(:class='$style.ctrls')
       button(@click='addNewGroup()', :class='$style.btn') Добавить группу
       input(type='text', v-model='inputText', :class='$style.field', placeholder='Введите название')
-    div(:class='$style.infoText', v-show='infoText') {{infoText}}
+    div(v-show='infoText') {{infoText}}
 
 </template>
 
@@ -49,9 +49,7 @@
   .layout {
     height: 70px;
   }
-  .infoText {
 
-  }
   .ctrls {
     margin-bottom: 6px;
   }

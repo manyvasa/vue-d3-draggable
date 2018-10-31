@@ -5,8 +5,8 @@
         span {{ groupName || 'Group name'}}
       div
         a(href='#', @click='removeGroup(id)')
-          svg.icon.icon-cancel-circle
-            use(xlink:href='#icon-cancel-circle')
+          svg.icon(xmlns='http://www.w3.org/2000/svg', width='16', height='16', viewBox='0 0 24 24')
+            path(d='M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm6 16.538l-4.592-4.548 4.546-4.587-1.416-1.403-4.545 4.589-4.588-4.543-1.405 1.405 4.593 4.552-4.547 4.592 1.405 1.405 4.555-4.596 4.591 4.55 1.403-1.416z')
     div(v-if='groupUsers.length === 0')
       span В группе пусто
     draggable(
@@ -16,7 +16,6 @@
       @add='updateUsers',
       @remove='updateUsers',
       :class='$style.users',
-      :move="onMoveCallback"
     )
       a(v-for='user in groupUsers', :class='$style.item', :name='fetchUserName(user)') {{fetchUserName(user)}}
       a(:class='$style.entry')
@@ -45,22 +44,7 @@
     },
 
     methods: {
-      onMoveCallback(evt) {
-        // console.log(evt.target)
-        //
-        // const movedUserId = evt.draggedContext.element
-        // const checkUserId = evt.relatedContext.list.some((item) => {
-        //   return item === movedUserId
-        // })
-        // if (checkUserId) return false
-        // //нельзя в свой же
-      },
-
       updateUsers() {
-        // const groupUsersUniq = this.groupUsers.filter((item, pos) => {
-        //   return this.groupUsers.indexOf(item) === pos;
-        // })
-
         this.$store.getters.dataGroups.filter((group) => {
           if (group.id === this.id) {
             group.users = this.groupUsers
@@ -99,6 +83,7 @@
     margin-bottom: 10px;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     color: white;
     font-weight: 600;
     box-shadow: 0 3px 12px -4px rgba(0,0,0,0.75);

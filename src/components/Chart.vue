@@ -14,7 +14,7 @@
           defaultFill: '#8fbc8f',
           activeFill: '#c10f0f',
           strokeColor: '#777777'
-        }
+        },
       }
     },
     watch: {
@@ -25,6 +25,7 @@
     mounted() {
       this.CreationNodes()
 
+
     },
     computed: {
       dataGroups() {
@@ -32,6 +33,7 @@
       }
     },
     methods: {
+
       CreationNodes() {
         const activeFill = this.groupsColor.activeFill;
         const defaultFill = this.groupsColor.defaultFill;
@@ -85,10 +87,14 @@
           .attr("dy", ".35em")
           .text(function(d) { return d.name });
 
+        const sqrtScale = d3.scaleSqrt()
+          .domain([1, 377])
+          .range([10, 80])
+
         let force = d3.forceSimulation(this.dataGroups)
-          .force("charge", d3.forceManyBody().strength(-4))
-          .velocityDecay(0.4)
-          .force("center", d3.forceCenter(this.width / 2, this.height / 2));
+          .force('x', d3.forceX(this.width / 2).strength(0.03))
+          .force('y', d3.forceY(this.height / 2).strength(0.03))
+          .force('collide', d3.forceCollide(d => sqrtScale(d.users.length) + 1));
 
         force.nodes(this.dataGroups)
 
@@ -96,8 +102,15 @@
           node.select("circle").attr("r", function(d) {
               return (d.users.length + 1) * 2});
 
-          node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });
+          node.attr("transform", function(d) {
+            if (!d.x) {
+              d.x = 400
+              d.y = 250
+            }
+            return "translate(" + d.x + "," + d.y + ")";
+          });
         })
+
       },
 
       updateNodes () {

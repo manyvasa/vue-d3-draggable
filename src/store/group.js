@@ -304,7 +304,7 @@ export default {
     dataGroups: [
       {id: 'g123456', name: 'People', users: ['u0002', 'u0003', 'u0004']},
       {id: 'g123457', name: 'Ork`s', users: ['u0002', 'u0006', 'u0007']},
-      {id: 'g123458', name: 'Dark Elf', users: ['u0008', 'u0009', 'u00010']},
+      {id: 'g123458', name: 'Dark Elf', users: ['u0008', 'u0009', 'u00010', 'u00011', 'u00012', 'u00013', 'u00014']},
       {id: 'g123459', name: 'Light Elf', users: []}
     ]
   },
