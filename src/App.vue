@@ -1,59 +1,39 @@
-<template>
-  <div id="app">
-    <Chart></Chart>
-    <div class="control">
-      <button @click="addNewGroup()">Add Group</button>
-      <input type="text" v-model="inputText">
-    </div>
-    <div class="layout">
-      <Group
-          v-for="group in dataGroups"
-          :key="group.id"
-          :groupName="group.name"
-          :groupId="group.id"
-          :listUsers="group.users"
-      >
-      </Group>
-    </div>
-  </div>
+<template lang="pug">
+  #app
+    .chart
+      chart
+    .control
+      control
+    .groups
+      symbol#icon-cancel-circle(viewbox='0 0 16 16', width="16px", height="16px")
+        path(d='M16 0c-8.837 0-16 7.163-16 16s7.163 16 16 16 16-7.163 16-16-7.163-16-16-16zM16 29c-7.18 0-13-5.82-13-13s5.82-13 13-13 13 5.82 13 13-5.82 13-13 13z')
+        path(d='M21 8l-5 5-5-5-3 3 5 5-5 5 3 3 5-5 5 5 3-3-5-5 5-5z')
+      group(
+        v-for='group in dataGroups',
+        :key='group.id',
+        :groupName='group.name',
+        :groupId='group.id',
+        :listUsers='group.users')
 </template>
 
 <script>
-import Group from './components/Group'
-import Chart from './components/Chart'
-import {mapActions} from 'vuex'
-import { getGroupId } from './services/getGroupId'
+  import Chart from './components/Chart'
+  import Group from './components/Group'
+  import Control from './components/Control'
 
-export default {
-  name: 'app',
-  components: {
-    Group,
-    Chart
-  },
-  data () {
-    return {
-      inputText: null
-    }
-  },
-  computed: {
-    dataGroups: {
-      get() {
+  export default {
+    name: 'app',
+    components: {
+      Chart,
+      Control,
+      Group,
+    },
+    computed: {
+      dataGroups() {
         return this.$store.getters.dataGroups
-      },
-      set(value) {
-        this.$store.commit('updateList', value)
       }
     }
-  },
-  methods: {
-    ...mapActions(['addGroup']),
-    addNewGroup () {
-      const nextId = getGroupId(this.dataGroups)
-      const newGroup  = {id: nextId, name: this.inputText}
-      this.addGroup(newGroup)
-    },
   }
-}
 </script>
 
 <style>
@@ -70,7 +50,7 @@ export default {
   }
 
   body {
-    background-color: #deb887;
+    background-color: #fff7e1;
   }
 
   a {
@@ -78,9 +58,32 @@ export default {
     text-decoration: none;
   }
 
-  .layout {
+  .icon {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    stroke-width: 0;
+    stroke: currentColor;
+    fill: currentColor;
+  }
+
+  .chart {
     display: flex;
+    justify-content: center;
+  }
+
+  .control {
+    padding-top: 20px;
+  }
+
+  .groups {
+    display: flex;
+    min-height: 270px;
     flex-direction: row;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    align-items: flex-start;
   }
 
 </style>

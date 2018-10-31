@@ -1,6 +1,5 @@
-<template>
-  <div id="inner">
-  </div>
+<template lang="pug">
+  #visual(:class='$style.layout')
 </template>
 
 <script>
@@ -10,35 +9,44 @@
     data() {
       return {
         width: 960,
-        height: 500
+        height: 500,
+        groupsColor: {
+          defaultFill: '#8fbc8f',
+          activeFill: '#c10f0f',
+          strokeColor: '#777777'
+        }
       }
     },
     watch: {
       dataGroups: function () {
-        this.reLoadSvg()
+        this.updateNodes()
       },
     },
     mounted() {
-      this.crSvg()
+      this.CreationNodes()
+
     },
     computed: {
-      dataGroups: {
-        get() {
-          return this.$store.getters.dataGroups
-        },
-        set(value) {
-          //this.$store.commit('updateList', value)
-        }
+      dataGroups() {
+        return this.$store.getters.dataGroups
       }
     },
     methods: {
-      crSvg() {
-        const svg = d3.select("#inner").append("svg")
-          .attr("width", this.width)
-          .attr("height", this.height);
+      CreationNodes() {
+        const activeFill = this.groupsColor.activeFill;
+        const defaultFill = this.groupsColor.defaultFill;
 
-        let node = svg.append("g")
-          .attr("class", "nodes")
+
+        const svg = d3.select("#visual").append("svg")
+          .attr("width", this.width)
+          .attr("height", this.height)
+          .call(d3.zoom()
+            .scaleExtent([-10, 10])
+            .on("zoom", zoom));
+
+        let g = svg.append("g")
+        let node = g
+          .style('cursor', 'pointer')
           .selectAll("g")
           .data(this.dataGroups)
           .enter().append("g")
@@ -47,6 +55,7 @@
               if(!d3.event.active) {force.alphaTarget(0.3).restart();}
               d.fx = d.x;
               d.fy = d.y;
+              this.querySelector('circle').setAttribute('fill', activeFill)
             })
             .on('drag', function(d) {
               d.fx = d3.event.x
@@ -56,14 +65,19 @@
               if (!d3.event.active) {force.alphaTarget(0);}
               d.fx = null;
               d.fy = null;
+              this.querySelector('circle').setAttribute('fill', defaultFill)
             })
           );
+
+        function zoom() {
+          g.attr("transform", d3.event.transform);
+        }
 
         node.append('circle')
           .attr("r", function(d) {
             return (d.users.length + 1) * 2})
-          .attr("fill", '#8fbc8f')
-          .attr("stroke", '#777777')
+          .attr("fill", this.groupsColor.defaultFill)
+          .attr("stroke", this.groupsColor.strokeColor)
           .attr("stroke-width", '1')
 
         node.append("text")
@@ -86,18 +100,24 @@
         })
       },
 
-      reLoadSvg () {
-        d3.select("#inner").select("svg").remove()
-        this.crSvg()
+      updateNodes () {
+        d3.select("#visual").select("svg").remove()
+        this.CreationNodes()
       }
+
     }
 
   }
 
 </script>
 
-<style scoped>
-  .nodes {
-    cursor: pointer;
+<style module>
+  .layout {
+    border: 1px solid black;
+    width: 70%;
+    background-color: #f7f4ba;
+    overflow-x: hidden;
   }
+
+
 </style>
