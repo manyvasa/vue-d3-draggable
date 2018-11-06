@@ -1,5 +1,9 @@
-# good-zone
-
+# Visualization of user groups.
+#### Vue + Vuex + d3(d3drag, d3zoom) + VueDraggable
+You can use:
+* add group
+* delete group
+* move users
 ## Project setup
 ```
 npm install
